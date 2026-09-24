@@ -9,6 +9,7 @@ One line per finished step. On resume: read this, check what exists, don't rerun
 - [x] 2e. License options = flower categories in the catalogue, THC high→low (tie: CBD low→high): T22/C4 (preselected), T18/C3, T15/C3, T10/C2, T10/C10, T3/C15, T1/C22, אחר. Dropped T20/C4, T1/C20.
 - [ ] 1. Supabase project (Frankfurt) + `schema.sql`: BLOCKED, no Supabase CLI or access; waiting for Tomer to send the Project URL + anon key.
 - [ ] 2c. Fill SUPABASE_URL / SUPABASE_ANON_KEY (anon only).
-- [ ] 3. GitHub repo `tomertalker/ma-oved-lecha` + Pages from main root: BLOCKED, `gh` not installed; waiting for Tomer to decide on GitHub access.
+- [x] 3a. `gh` 2.46.0 installed with apt; logged in as tomertalker. gh is the git credential helper for this repo only (repo-local config); global git config unchanged.
+- [ ] 3b. GitHub repo `tomertalker/ma-oved-lecha` + Pages from main root.
 - [ ] 4. Live tests (insert ok ×2, select/update/delete denied ×2, `curl -I` 200, test rows deleted).
 - [ ] 5. Report.
