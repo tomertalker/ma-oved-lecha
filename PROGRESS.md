@@ -5,6 +5,7 @@ One line per finished step. On resume: read this, check what exists, don't rerun
 
 - [x] 2a. Product list: `reco-engine/out/survey_products.json`, 207 products (168 catalogue flowers, all categories, + 39 old-snapshot products no longer listed), deduped by SKU; fields s,h,e,g,c,cat (reco-engine 66d91df).
 - [x] 2b. `index.html` = `survey.html` with three edits: PRODUCTS = that list, GROWERS = 30 unique non-empty growers (sorted), plistHTML tag `T22/C4` → `p.cat` (omitted if empty). Supabase keys still empty (preview mode).
+- [x] 2d. Category shown next to picked product names: picked chips, rating card title, compare cards (grey tag); best/worst chips as "name · T15/C3"; recap summary. Payload unchanged.
 - [ ] 1. Supabase project (Frankfurt) + `schema.sql`: BLOCKED, no Supabase CLI or access; waiting for Tomer to send the Project URL + anon key.
 - [ ] 2c. Fill SUPABASE_URL / SUPABASE_ANON_KEY (anon only).
 - [ ] 3. GitHub repo `tomertalker/ma-oved-lecha` + Pages from main root: BLOCKED, `gh` not installed; waiting for Tomer to decide on GitHub access.

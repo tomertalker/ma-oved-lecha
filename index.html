@@ -235,6 +235,9 @@ function q(title, body, sub){ return `<div class="q"><div class="qt">${title}${s
 
 function pickName(pk){ return pk.sku ? BY_SKU[pk.sku].h : pk.name; }
 function pickSub(pk){ if(!pk.sku) return "זן שלא ברשימה"; const p=BY_SKU[pk.sku]; return `<span class="en">${esc(p.e)}</span>${p.g?` · ${esc(p.g)}`:""}`; }
+function pickCat(pk){ return pk.sku ? BY_SKU[pk.sku].cat||"" : ""; }
+function pickTag(pk){ const c=pickCat(pk); return c?` <span class="tag">${esc(c)}</span>`:""; }   // category next to the name: same-name products differ by it
+function pickLabel(pk){ const c=pickCat(pk); return c?`${pickName(pk)} · ${c}`:pickName(pk); }   // plain-text version, for chip labels
 function useLabel(u){ if(u==="general") return "באופן כללי"; if(u==="other") return S.profile.usesOther.trim()||"אחר"; return L("uses")[u]; }
 function useKeys(){ return S.profile.uses.length ? S.profile.uses : ["general"]; }
 
@@ -304,7 +307,7 @@ function vPicks(){
   return `<div class="screen">
     <div class="lead"><h2>אילו זנים ניסית?</h2><p>בחר 5–6 זנים או יותר שאתה זוכר. גם כאלה שאהבת וגם כאלה שלא. זנים שלא עבדו חשובים בדיוק כמו אלה שכן.</p></div>
     <div class="q"><div class="qt num" id="pickMsg">${msg}</div>
-      <div class="picked">${S.picks.map(pk=>`<span class="pchip">${esc(pickName(pk))}<button type="button" data-unpick="${pk.key}" aria-label="הסר">×</button></span>`).join("")}</div></div>
+      <div class="picked">${S.picks.map(pk=>`<span class="pchip">${esc(pickName(pk))}${pickTag(pk)}<button type="button" data-unpick="${pk.key}" aria-label="הסר">×</button></span>`).join("")}</div></div>
     <input class="search" id="search" type="search" placeholder="חיפוש זן בעברית או באנגלית" value="${esc(S.q)}" autocomplete="off">
     <div class="plist" id="plist">${plistHTML()}</div>
     <div class="q"><div class="qt">זן שלא ברשימה?</div>
@@ -345,7 +348,7 @@ function vCard(){
   const open=!!S.deepOpen[key];
   return `<div class="screen">
     <div class="card">
-      <div class="strainhead"><h3>${esc(pickName(pk))}</h3><div class="sub">${pickSub(pk)}</div></div>
+      <div class="strainhead"><h3>${esc(pickName(pk))}${pickTag(pk)}</h3><div class="sub">${pickSub(pk)}</div></div>
       ${q("מה דעתך עליו?",`<div class="grid3">${O.verdict.map(([v,l])=>`<button type="button" class="big ${v}" data-p="${R}.verdict" data-v="${v}" aria-pressed="${r.verdict===v}">${l}</button>`).join("")}</div>`)}
       ${q("כמה כוכבים היית נותן לו?",`<div class="stars">${stars}</div>`)}
       ${q("כמה הוא עזר?",eff,"(אם לא בדקת משהו, דלג)")}
@@ -360,10 +363,10 @@ function vCard(){
 }
 function vCompare(){
   const rated=S.picks.filter(pk=>S.ratings[pk.key]&&S.ratings[pk.key].verdict);
-  const opts=rated.map(pk=>[pk.key,pickName(pk)]);
+  const opts=rated.map(pk=>[pk.key,pickLabel(pk)]);
   const deepAsk=[S.best,S.worst].filter(Boolean).filter((k,i,a)=>a.indexOf(k)===i).map(k=>{
     const pk=S.picks.find(x=>x.key===k); const label=k===S.best?"עזר הכי הרבה":"עזר הכי פחות";
-    return `<div class="card"><div class="strainhead"><h3>${esc(pickName(pk))}</h3><div class="sub">${label}</div></div>
+    return `<div class="card"><div class="strainhead"><h3>${esc(pickName(pk))}${pickTag(pk)}</h3><div class="sub">${label}</div></div>
       ${S.deepOpen[k]?deepHTML(k):`<button type="button" class="more" data-deep="${k}">+ ספר עוד על הזן הזה (30 שניות)</button>`}</div>`;
   }).join("");
   return `<div class="screen">
@@ -388,13 +391,13 @@ function summaryHTML(){
   const cnt=(arr)=>{const m={};arr.forEach(k=>m[k]=(m[k]||0)+1);return Object.entries(m).sort((a,b)=>b[1]-a[1]);};
   const perUse=useKeys().filter(u=>u!=="general").map(u=>{
     const c=rated.filter(x=>x.r.effect[u]!=null).sort((a,b)=>(+b.r.effect[u])-(+a.r.effect[u]));
-    return c.length && +c[0].r.effect[u]>=2 ? [`הכי עזר ל${esc(useLabel(u))}`, esc(pickName(c[0].pk))] : null;
+    return c.length && +c[0].r.effect[u]>=2 ? [`הכי עזר ל${esc(useLabel(u))}`, esc(pickName(c[0].pk))+pickTag(c[0].pk)] : null;
   }).filter(Boolean);
   const fx=cnt(rated.flatMap(x=>x.r.sidefx).filter(k=>k!=="other")).slice(0,3).map(([k])=>L("sidefx")[k]);
   const tastes=cnt(liked.flatMap(x=>x.r.deep.tastes).filter(k=>k!=="dunno")).slice(0,3).map(([k])=>L("tastes")[k]);
   const rows=[
-    best?["הזן שהכי עזר לך",esc(pickName(best))]:null,
-    worst?["הזן שהכי פחות עזר",esc(pickName(worst))]:null,
+    best?["הזן שהכי עזר לך",esc(pickName(best))+pickTag(best)]:null,
+    worst?["הזן שהכי פחות עזר",esc(pickName(worst))+pickTag(worst)]:null,
     ...perUse,
     tastes.length?["טעמים בזנים שאהבת",tastes.join(", ")]:null,
     fx.length?["מה הכי הפריע לך",fx.join(", ")]:null,
