@@ -10,6 +10,7 @@ One line per finished step. On resume: read this, check what exists, don't rerun
 - [ ] 1. Supabase project (Frankfurt) + `schema.sql`: BLOCKED, no Supabase CLI or access; waiting for Tomer to send the Project URL + anon key.
 - [ ] 2c. Fill SUPABASE_URL / SUPABASE_ANON_KEY (anon only).
 - [x] 3a. `gh` 2.46.0 installed with apt; logged in as tomertalker. gh is the git credential helper for this repo only (repo-local config); global git config unchanged.
-- [ ] 3b. GitHub repo `tomertalker/ma-oved-lecha` + Pages from main root.
+- [x] 3b. Public repo https://github.com/tomertalker/ma-oved-lecha created, main pushed. Commits authored as tomertalker <tomertalker@users.noreply.github.com>.
+- [ ] 3c. Pages from main root: only AFTER 2c (Supabase keys in), so the page never goes live in preview mode.
 - [ ] 4. Live tests (insert ok ×2, select/update/delete denied ×2, `curl -I` 200, test rows deleted).
 - [ ] 5. Report.
