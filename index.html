@@ -1,0 +1,559 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>מה עובד לך</title>
+<meta name="robots" content="noindex">
+<meta property="og:title" content="מה עובד לך?">
+<meta property="og:description" content="שאלון קצר ואנונימי למטופלי קנאביס רפואי: אילו זנים עובדים לך, ומה פחות.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Rubik:wght@500;700&display=swap">
+<style>
+:root{
+  --bg:#F3F6F4; --surface:#FFFFFF; --sunk:#E9EFEB; --ink:#16231D; --muted:#5A6A62; --line:#D6DFDA;
+  --accent:#23694A; --accent-ink:#FFFFFF; --accent-soft:#DCEDE4;
+  --star:#D2922A; --warn:#A5681A; --warn-soft:#F6EAD6; --bad:#A93D2C; --bad-soft:#F6E0DB;
+  --good:#2A7A4C; --good-soft:#DFF0E5;
+  --preview:#FFF4D6; --preview-ink:#5C4610;
+  --font-body:"Assistant","Heebo","Arial Hebrew","Segoe UI",Arial,sans-serif;
+  --font-head:"Rubik","Assistant","Arial Hebrew","Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#101613; --surface:#17201B; --sunk:#1F2A24; --ink:#E5EEE9; --muted:#96A69E; --line:#2A3630;
+    --accent:#5CC28F; --accent-ink:#0C1410; --accent-soft:#1B3A2A;
+    --star:#E6AE4F; --warn:#E3AA55; --warn-soft:#3A2E1A; --bad:#E57D6A; --bad-soft:#3D2420;
+    --good:#65C08B; --good-soft:#1B3526; --preview:#3A3219; --preview-ink:#F0DDA6;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#101613; --surface:#17201B; --sunk:#1F2A24; --ink:#E5EEE9; --muted:#96A69E; --line:#2A3630;
+  --accent:#5CC28F; --accent-ink:#0C1410; --accent-soft:#1B3A2A;
+  --star:#E6AE4F; --warn:#E3AA55; --warn-soft:#3A2E1A; --bad:#E57D6A; --bad-soft:#3D2420;
+  --good:#65C08B; --good-soft:#1B3526; --preview:#3A3219; --preview-ink:#F0DDA6;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:17px;line-height:1.5}
+.wrap{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:0 120px}
+h1,h2,h3{font-family:var(--font-head);text-wrap:balance;margin:0}
+button,input,textarea{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.en{direction:ltr;unicode-bidi:isolate}
+
+.preview{margin-top:12px;background:var(--preview);color:var(--preview-ink);border-radius:10px;padding:8px 12px;font-size:14px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px 10px}
+.progress{display:grid;gap:6px}
+.pmeta{display:flex;justify-content:space-between;font-size:14px;color:var(--muted)}
+.pmeta b{color:var(--ink)}
+.bar{height:6px;background:var(--sunk);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .25s}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+
+.screen{display:grid;gap:22px;padding-top:8px}
+.lead{display:grid;gap:6px}
+.lead h2{font-size:24px;font-weight:700;line-height:1.25}
+.lead p{margin:0;color:var(--muted)}
+.q{display:grid;gap:10px}
+.qt{font-weight:700;font-size:17px}
+.qt small{font-weight:400;color:var(--muted);font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:42px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 15px;cursor:pointer;font-size:16px;line-height:1.2}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);font-weight:700}
+.chip.bad[aria-pressed="true"]{background:var(--bad-soft);border-color:var(--bad)}
+.chip[disabled]{opacity:.4;cursor:not-allowed}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.big{min-height:52px;border:1px solid var(--line);background:var(--surface);border-radius:12px;cursor:pointer;font-weight:700;font-size:16px}
+.big.like[aria-pressed="true"]{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.big.unsure[aria-pressed="true"]{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
+.big.dislike[aria-pressed="true"]{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.stars{display:flex;gap:2px;direction:ltr;justify-content:flex-end}
+.star{border:0;background:transparent;font-size:34px;line-height:1;padding:2px 4px;cursor:pointer;color:var(--line)}
+.star.on{color:var(--star)}
+.scale{display:grid;grid-template-columns:repeat(11,1fr);gap:3px;direction:ltr}
+.sbtn{min-height:40px;border:1px solid var(--line);background:var(--surface);border-radius:8px;cursor:pointer;font-size:15px;padding:0}
+.sbtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.ends{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);direction:ltr}
+.slider{display:grid;gap:4px}
+.slider input[type=range]{width:100%;direction:ltr;accent-color:var(--accent);height:32px}
+.slider.off input{opacity:.35}
+.hint{font-size:14px;color:var(--muted);margin:0}
+textarea,.txt{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 12px;resize:vertical}
+textarea{min-height:84px}
+.txt{height:46px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:20px}
+.strainhead{display:grid;gap:2px}
+.strainhead h3{font-size:22px}
+.strainhead .sub{color:var(--muted);font-size:14px;display:flex;gap:8px;flex-wrap:wrap}
+.reveal{border-top:1px dashed var(--line);padding-top:16px;display:grid;gap:18px}
+.more{justify-self:start;border:1px dashed var(--accent);background:transparent;color:var(--accent);border-radius:10px;padding:9px 14px;font-weight:700;cursor:pointer}
+
+.search{width:100%;height:48px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding-inline:14px}
+.picked{display:flex;flex-wrap:wrap;gap:6px}
+.pchip{display:inline-flex;align-items:center;gap:6px;background:var(--accent-soft);border:1px solid var(--accent);border-radius:999px;padding:5px 6px 5px 12px;font-size:15px;font-weight:600}
+.pchip button{border:0;background:transparent;cursor:pointer;font-size:18px;line-height:1;padding:0 4px;color:var(--muted)}
+.plist{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface);max-height:52vh;overflow-y:auto}
+.prow{width:100%;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;text-align:start;background:transparent;border:0;border-top:1px solid var(--line);padding:11px 14px;cursor:pointer}
+.prow:first-child{border-top:0}
+.prow .box{width:24px;height:24px;border-radius:7px;border:2px solid var(--line);display:grid;place-items:center;font-size:15px;color:var(--accent-ink)}
+.prow[aria-pressed="true"] .box{background:var(--accent);border-color:var(--accent)}
+.prow .nm{font-weight:700;display:block}
+.prow .sub{font-size:13px;color:var(--muted);display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:12px;border-radius:4px;padding:0 6px;background:var(--sunk);color:var(--muted)}
+.addrow{display:flex;gap:8px}
+.addrow .txt{flex:1;min-width:0}
+.ghost{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:0 16px;cursor:pointer;font-weight:600;min-height:46px}
+
+.navbar{position:fixed;inset-inline:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.navin{max-width:560px;margin:0 auto;display:flex;gap:10px;align-items:center}
+.next{flex:1;min-height:52px;border:0;border-radius:14px;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:18px;cursor:pointer}
+.next[disabled]{opacity:.4;cursor:not-allowed}
+.back{min-height:52px;border:1px solid var(--line);background:transparent;border-radius:14px;padding:0 16px;cursor:pointer}
+.why{font-size:14px;color:var(--muted);text-align:center;margin-top:6px}
+
+.welcome{display:grid;gap:18px;padding-top:18px}
+.welcome h1{font-size:32px;line-height:1.15}
+.welcome .p{font-size:18px;margin:0}
+.facts{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.facts li{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+.facts .ic{width:28px;height:28px;border-radius:8px;background:var(--accent-soft);display:grid;place-items:center;font-weight:700;color:var(--accent);font-family:var(--font-head)}
+.small{font-size:14px;color:var(--muted)}
+
+.summary{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:10px}
+.summary .row{display:grid;gap:2px}
+.summary .k{font-size:13px;color:var(--muted)}
+.summary .v{font-weight:700}
+.code{font-family:var(--font-head);font-size:28px;letter-spacing:.18em;direction:ltr;text-align:center;background:var(--sunk);border-radius:12px;padding:10px}
+details.dev{background:var(--preview);color:var(--preview-ink);border-radius:12px;padding:10px 12px;font-size:13px}
+details.dev pre{white-space:pre-wrap;word-break:break-word;direction:ltr;text-align:left;margin:8px 0 0;max-height:320px;overflow:auto}
+.effrows{display:grid;gap:14px}
+.effrow{display:grid;gap:6px}
+.effrow .lbl{font-weight:600;font-size:15px}
+.chips.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.chips.seg .chip{padding:6px 4px;font-size:15px;min-height:40px;border-radius:10px}
+</style>
+
+<div class="wrap" dir="rtl" lang="he">
+  <div class="preview" id="previewNote">תצוגה מקדימה: התשובות לא נשמרות. בדף האמיתי רשימת הזנים תכלול את המלאי המלא, גם מוצרים שכבר לא במלאי.</div>
+  <div class="top" id="top" hidden>
+    <div class="progress">
+      <div class="pmeta"><span id="pname"></span><span class="num" id="pcount"></span></div>
+      <div class="bar"><i id="pbar" style="width:0%"></i></div>
+    </div>
+  </div>
+  <main id="app"></main>
+</div>
+<nav class="navbar" id="nav" hidden>
+  <div class="navin">
+    <button type="button" class="back" id="backBtn">חזרה</button>
+    <button type="button" class="next" id="nextBtn">המשך</button>
+  </div>
+  <div class="why" id="why" hidden></div>
+</nav>
+
+<script>
+/* ---------- to go live: fill these two (Supabase > Project Settings > API). Empty = preview mode ---------- */
+const SUPABASE_URL = "";       // e.g. https://abcd1234.supabase.co
+const SUPABASE_ANON_KEY = "";  // the public "anon" key only, never the service_role key
+const LIVE = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+const SURVEY_VERSION = "survey-v1";
+const SAVE_KEY = "ma-oved-lecha-v1";
+
+const PRODUCTS = [{"s":"7290121713306","h":"א.נ.מ.ל או.ג'י","e":"A.N.M.L OG","g":"קרונוס","c":"i","cat":"T22/C4"},{"s":"720158423413","h":"א.פריט מיני","e":"A.Fritt Mini","g":"נובל","c":"h","cat":"T22/C4"},{"s":"7290120973022","h":"או סי אם","e":"OCM","g":"פרפלפארם","c":"s","cat":"T22/C4"},{"s":"7290121718103","h":"או.ג'י.סי","e":"OGC","g":"י.ג.ש ירוק ירוק","c":"s","cat":"T22/C4"},{"s":"7290020643339","h":"אוליבר מיני","e":"Oliver Mini","g":null,"c":"s","cat":"T22/C4"},{"s":"7290018788042","h":"אור","e":"Or","g":"טוגדר","c":"i","cat":"T22/C4"},{"s":"7290020108371","h":"אור","e":"Or","g":"טוגדר","c":"i","cat":"T15/C3"},{"s":"7290020108159","h":"אור סמול","e":"Or Small","g":"טוגדר","c":"i","cat":"T22/C4"},{"s":"7290020202574","h":"אורזקי מיני","e":"Orzki Mini","g":null,"c":"i","cat":"T22/C4"},{"s":"7290120973275","h":"איי בי אן","e":"ABN","g":null,"c":"i","cat":"T22/C4"},{"s":"789232175891","h":"איי בי מארקר","e":"A.B Marker","g":"גרינקום","c":"s","cat":"T22/C4"},{"s":"751503150388","h":"איי&אף","e":"A&F","g":"טריכום","c":"h","cat":"T22/C4"},{"s":"7290019411345","h":"אייץ'.ריין","e":"H.Rain","g":"מיל קריק גרוות'","c":"i","cat":"T22/C4"},{"s":"0789232175211","h":"אייצ'&בי","e":"H&B","g":null,"c":"s","cat":"T22/C4"},{"s":"7290112211293","h":"אייץ'18","e":"H18","g":"מיראקל וואלי","c":"i","cat":"T22/C4"},{"s":"7290121714501","h":"אינ. פרן","e":"In.Fern","g":"קרונוס","c":"i","cat":"T22/C4"},{"s":"789232176003","h":"איקס טי","e":"X.T","g":"גרינקום","c":"i","cat":"T22/C4"},{"s":"783214545924","h":"אל איי קוש","e":"L.A Kush","g":null,"c":"s","cat":"T10/C10"},{"s":"7290119523368","h":"אל בולסון","e":"El Bolson","g":"גרינמד","c":"i","cat":"T22/C4"},{"s":"7290121717953","h":"אל.וי או.ג'י","e":"LV OG","g":"קרונוס","c":"h","cat":"T22/C4"},{"s":"7290020149701","h":"אל.קיו מיני","e":"L.Q Mini","g":null,"c":"i","cat":"T22/C4"},{"s":"7290018159927","h":"אלגרו","e":"Allegro","g":"מדוקאן","c":"s","cat":"T22/C4"},{"s":"7290119522286","h":"אלור","e":"Eloure","g":"גרינמד","c":"i","cat":"T22/C4"},{"s":"7290119522149","h":"אלטו מיני","e":"Alto Mini","g":"גרינמד","c":"i","cat":"T22/C4"},{"s":"751503150289","h":"אלמי","e":"Almi","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"7290020504210","h":"אם איי מיני","e":"MA Mini","g":"פלאנטק","c":"h","cat":"T22/C4"},{"s":"7290019675969","h":"אם קיי קוש מיני","e":"MK Kush Mini","g":"קרונוס","c":"i","cat":"T22/C4"},{"s":"7290020643254","h":"אמ.וי-אמבר","e":"MV-Amber","g":"מיראקל וואלי","c":"i","cat":"T22/C4"},{"s":"7290020643285","h":"אמ.וי-קיי","e":"MV-K","g":"מיראקל וואלי","c":"h","cat":"T22/C4"},{"s":"7290019411284","h":"אמ.מאק","e":"M.Mac","g":"מיראקל וואלי","c":"h","cat":"T22/C4"},{"s":"7290120973176","h":"אס.בי אף","e":"S.BF","g":"פרפלפארם","c":"h","cat":"T22/C4"},{"s":"7290121714556","h":"אס.פי.אל.טי 33","e":"S.P.L.T 33","g":"קרונוס","c":"i","cat":"T22/C4"},{"s":"7290122462173","h":"אסטרו אף","e":"Astro F","g":"סיקסטי סבן סינס","c":"i","cat":"T22/C4"},{"s":"7290122461954","h":"אסטרו אף.סי.די","e":"Astro F.C.D","g":"סיקסטי סבן סינס","c":"i","cat":"T22/C4"},{"s":"7290122462104","h":"אסטרו בי.אר","e":"Astro B.R","g":"סיקסטי סבן סינס","c":"i","cat":"T22/C4"},{"s":"7290122462180","h":"אסטרו יו.קיי","e":"Astro U.K","g":"סיקסטי סבן סינס","c":"i","cat":"T22/C4"},{"s":"7290122461961","h":"אסטרו לאשיז","e":"Astro Lushiz","g":"סיקסטי סבן סינס","c":"h","cat":"T22/C4"},{"s":"7290122460230","h":"אסטרו מינטו","e":"Astro Minto","g":"סיקסטי סבן סינס","c":"s","cat":"T22/C4"},{"s":"7290110480042","h":"אסטרו קאפ","e":"Astro Cap","g":"סיקסטי סבן סינס","c":"i","cat":"T22/C4"},{"s":"7290020576965","h":"אף ג'י מיני","e":"FG Mini","g":"פלאנטק","c":"i","cat":"T22/C4"},{"s":"7290120972056","h":"אף.או.ג'י","e":"F.O.G","g":null,"c":"i","cat":"T22/C4"},{"s":"7290020576934","h":"אף.אף","e":"F.F","g":"קנאבר","c":"i","cat":"T22/C4"},{"s":"751503149870","h":"אר אס 11","e":"RS11","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"720158422942","h":"אר.טי.זד","e":"RTZ","g":"קנאבר","c":"h","cat":"T22/C4"},{"s":"7290119523184","h":"אר&אם מיני","e":"R&M Mini","g":"גרינמד","c":"h","cat":"T22/C4"},{"s":"7290112212252","h":"ארגמן","e":"Argaman","g":"שיח","c":"h","cat":"T10/C10"},{"s":"7290120977242","h":"אריאל מיני","e":"Ariel Mini","g":null,"c":"i","cat":"T22/C4"},{"s":"7290020349316","h":"ארתור","e":"Arthur","g":"גרינמד","c":"i","cat":"T22/C4"},{"s":"7290120972544","h":"בוטי סי","e":"Booty C","g":"פרפלפארם","c":"s","cat":"T22/C4"},{"s":"751503149566","h":"בוקה","e":"Buca","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"7290020349675","h":"בי אנ סי מיני","e":"BnC Mini","g":"קנאבר","c":"h","cat":"T22/C4"},{"s":"783214545368","h":"בי בי אס ג׳י","e":"BBSG","g":"קולטור דס סומטס","c":"i","cat":"T22/C4"},{"s":"720158246241","h":"בי.יו.סי בוקוטי מיני","e":"B.U.C Bucotti Mini","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"720158246258","h":"בי.יו.סי וי.נום","e":"B.U.C V.Nom","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"608275467018","h":"בי.יו.סי מארקר","e":"B.U.C Marker","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"7290114072199","h":"בלאק","e":"Black","g":"שיח","c":"i","cat":"T22/C4"},{"s":"751503150500","h":"בלאק אם","e":"Black M","g":"טריכום","c":"h","cat":"T22/C4"},{"s":"7290120977402","h":"בלדינום","e":"Bladinum","g":null,"c":"s","cat":"T22/C4"},{"s":"7290019217978","h":"בלו די","e":"Blue D","g":"קרונוס","c":"s","cat":"T15/C3"},{"s":"7290019675518","h":"בלו תאי","e":"Blue Thai","g":"קרונוס","c":"s","cat":"T22/C4"},{"s":"7290020149848","h":"בלק בוב","e":"BLK Bob","g":"אוונט","c":"i","cat":"T22/C4"},{"s":"7290020149756","h":"בלק קאבר","e":"BLK Cavar","g":"אוונט","c":"i","cat":"T22/C4"},{"s":"7290112212573","h":"בראון","e":"Brown","g":"גרינטון","c":"i","cat":"T22/C4"},{"s":"7290020349941","h":"ברבדוס","e":"Barbados","g":null,"c":"i","cat":"T22/C4"},{"s":"7290120972537","h":"ג'ורג'יה פי","e":"Georgia Pi","g":"פרפלפארם","c":"i","cat":"T22/C4"},{"s":"7290120973183","h":"ג'ורג'יה פי","e":"Georgia P","g":null,"c":"i","cat":"T22/C4"},{"s":"7290020576729","h":"ג'י איי מיני","e":"GI Mini","g":"פלאנטק","c":"i","cat":"T22/C4"},{"s":"7290018609224","h":"ג'י אם או","e":"GMO","g":"קרונוס","c":"i","cat":"T22/C4"},{"s":"783214545030","h":"ג'י אם או.טי","e":"GMO.T","g":"קנאבר","c":"i","cat":"T22/C4"},{"s":"7290121717700","h":"ג'י אס פי.ג'י","e":"GSP.G","g":"קרונוס","c":"h","cat":"T22/C4"},{"s":"7290121714655","h":"ג'י אר.פי קווסט","e":"Qwest GR.P","g":"דציבל","c":"i","cat":"T22/C4"},{"s":"7290019217459","h":"ג'י ג'י 4","e":"GG4","g":"קרונוס","c":"i","cat":"T22/C4"},{"s":"751503149665","h":"ג'י פי","e":"GP","g":"טריכום","c":"h","cat":"T22/C4"},{"s":"7290120973169","h":"ג'י.אם.או.אס","e":"GMO.S","g":"פרפלפארם","c":"i","cat":"T22/C4"},{"s":"7290121713108","h":"ג'יאס קוש","e":"GS Kush","g":null,"c":"i","cat":"T15/C3"},{"s":"789232175723","h":"ג'לטיקס","e":"Gelatix","g":"גרינקום","c":"s","cat":"T22/C4"},{"s":"7290120975132","h":"ג'קר 31","e":"JKR 31","g":"פרפלפארם","c":"i","cat":"T22/C4"},{"s":"7290120973053","h":"גארי","e":"Gary","g":null,"c":"i","cat":"T22/C4"},{"s":"7290120973374","h":"גארי איי אל","e":"Gary IL","g":"קנדוק","c":"i","cat":"T22/C4"},{"s":"7290020576927","h":"גאש","e":"Gus","g":"קנאבר","c":"i","cat":"T22/C4"},{"s":"7290019411932","h":"גו.בי","e":"Go.B","g":"שיח","c":"s","cat":"T22/C4"},{"s":"7290120972476","h":"גוואיוזה","e":"Guayusa","g":"קוטניי קוואנטום","c":"s","cat":"T22/C4"},{"s":"7290020725011","h":"גזית","e":"Gazit","g":"קנאדו","c":"i","cat":"T22/C4"},{"s":"7290120976375","h":"גלייס","e":"Glase","g":"קנאבר","c":"s","cat":"T22/C4"},{"s":"7290121717755","h":"גרייפר","e":"Gryper","g":"קרונוס","c":"i","cat":"T22/C4"},{"s":"720158422904","h":"דאבליו רינו","e":"W Rinoo","g":"גרינקום","c":"i","cat":"T22/C4"},{"s":"7290020349866","h":"דאבליו.אר מיני","e":"W.R Mini","g":"קנאבר","c":"i","cat":"T22/C4"},{"s":"7290121718158","h":"דבליו 56","e":"W56","g":null,"c":"i","cat":"T22/C4"},{"s":"7290121714754","h":"דבליו קווסט","e":"Qwest W","g":"דציבל","c":"h","cat":"T22/C4"},{"s":"7290019613343","h":"דה ג'י. אס. סי","e":"The G.S.C","g":"טוגדר","c":"s","cat":"T22/C4"},{"s":"7290019343066","h":"דואט","e":"Duet","g":"מדוקאן","c":"s","cat":"T10/C10"},{"s":"7290121713757","h":"דולאתו","e":"Dolato","g":"קרונוס","c":"h","cat":"T22/C4"},{"s":"7290020576477","h":"די בי מיני","e":"DB Mini","g":"פלאנטק","c":"i","cat":"T22/C4"},{"s":"7290120977037","h":"דיינסטי 18","e":"Dynasty 18","g":"י.ג.ש ירוק ירוק","c":"s","cat":"T22/C4"},{"s":"7290120974609","h":"דיינסטי 36","e":"Dynasty 36","g":"י.ג.ש ירוק ירוק","c":"i","cat":"T22/C4"},{"s":"7290120974623","h":"דיינסטי 72","e":"Dynasty 72","g":null,"c":"i","cat":"T22/C4"},{"s":"7290020108258","h":"דליה אדומה","e":"Red Dahlia","g":"טוגדר","c":"i","cat":"T22/C4"},{"s":"7290020504715","h":"דליה אדומה","e":"Red Dahlia","g":"טוגדר","c":"i","cat":"T10/C2"},{"s":"7290020108302","h":"דליה אדומה מיני","e":"Mini Red Dahlia","g":"טוגדר","c":"i","cat":"T22/C4"},{"s":"7290112212269","h":"הולנדי","e":"The Dutch","g":"שיח","c":"i","cat":"T22/C4"},{"s":"7290019613190","h":"הייץ'.או.ג'י","e":"H.O.G","g":"טוגדר","c":"i","cat":"T22/C4"},{"s":"7290121713658","h":"הינדי קיי","e":"Hindi K","g":"קרונוס","c":"i","cat":"T22/C4"},{"s":"7290020149831","h":"הלקיט","e":"Helkit","g":"אוונט","c":"h","cat":"T22/C4"},{"s":"7290120977068","h":"וואי. אס מיני","e":"Y.S Mini","g":null,"c":"s","cat":"T22/C4"},{"s":"7290018375792","h":"וודינג סי קיי","e":"Wedding CK","g":"קרונוס","c":"h","cat":"T22/C4"},{"s":"7290120977655","h":"וויט בראנק סמול","e":"White Brunk Small","g":null,"c":"i","cat":"T22/C4"},{"s":"7290019675914","h":"וויט סקאוט מיני","e":"White Scout Mini","g":"קרונוס","c":"h","cat":"T22/C4"},{"s":"7290121718004","h":"וויט קוש","e":"White Kush","g":"קרונוס","c":"i","cat":"T22/C4"},{"s":"7290020576996","h":"וי אן","e":"VN","g":"פלאנטק","c":"h","cat":"T22/C4"},{"s":"751503150142","h":"ויולקס","e":"Violex","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"743407972241","h":"ויסטה","e":"Vista","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"7290020202116","h":"ז'רום","e":"Jerome","g":null,"c":"i","cat":"T22/C4"},{"s":"7290114073929","h":"זיו","e":"Ziv","g":"טוגדר","c":"s","cat":"T22/C4"},{"s":"7290020149763","h":"זנגריה","e":"Zengeria","g":"אוונט","c":"i","cat":"T22/C4"},{"s":"7290020643216","h":"טאי קיי","e":"Tai K","g":null,"c":"i","cat":"T22/C4"},{"s":"789232175099","h":"טוטאל פי","e":"Total P","g":null,"c":"h","cat":"T10/C10"},{"s":"751503149603","h":"טי סי","e":"TC","g":"טריכום","c":"s","cat":"T22/C4"},{"s":"7290020576699","h":"טיימס","e":"Thames","g":null,"c":"i","cat":"T22/C4"},{"s":"7290122460018","h":"טיקי אס.פי","e":"Tiki S.P","g":"סיקסטי סבן סינס","c":"i","cat":"T22/C4"},{"s":"7290120975231","h":"טמאלז","e":"Tamalez","g":"פרדייס ואלי","c":"i","cat":"T22/C4"},{"s":"7290120973244","h":"טמסקל","e":"Tamaskal","g":"אול ניישנס","c":"h","cat":"T22/C4"},{"s":"7290019675129","h":"טנג'י קוש","e":"Tangie Kush","g":"קרונוס","c":"i","cat":"T22/C4"},{"s":"7290119524006","h":"טפז","e":"TPZ","g":"קנאבר","c":"h","cat":"T3/C15"},{"s":"7290119523115","h":"טריפל איקס","e":"Triple X","g":"קנאבר","c":"i","cat":"T22/C4"},{"s":"751503149986","h":"טריפל סי","e":"Triple C","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"751503149993","h":"טריפל סי מיני","e":"Triple C Mini","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"7290120977297","h":"טרנקילה","e":"Tranquila","g":"גרינקום","c":"h","cat":"T1/C22"},{"s":"783214545054","h":"טרנקילה","e":"Tranquila","g":"גרינקום","c":"h","cat":"T3/C15"},{"s":"7290120975224","h":"יאמאנה","e":"Yamana","g":"קוטניי קוואנטום","c":"i","cat":"T22/C4"},{"s":"7290112218438","h":"יו.אס","e":"U.S","g":"אורגניגרם","c":"s","cat":"T22/C4"},{"s":"7290020108821","h":"יופיטר","e":"Jupiter","g":null,"c":"i","cat":"T22/C4"},{"s":"7290018788554","h":"ילו סאנפלאוור","e":"Yellow Sunflower","g":null,"c":"s","cat":"T22/C4"},{"s":"7290020108104","h":"ים","e":"Yam","g":"טוגדר","c":"i","cat":"T22/C4"},{"s":"760851225105","h":"לאבו","e":"Labo","g":"טריכום","c":"h","cat":"T22/C4"},{"s":"720158246296","h":"לובו","e":"Lovo","g":"טריכום","c":"h","cat":"T22/C4"},{"s":"7290020725004","h":"לוטם","e":"Lotem","g":"קנאדו","c":"h","cat":"T22/C4"},{"s":"7290120972360","h":"לקוטה","e":"Lakota","g":"אול ניישנס","c":"s","cat":"T22/C4"},{"s":"7290112212559","h":"מ.ר.מ.ל","e":"M.R.M.L","g":"גרינטון","c":"s","cat":"T22/C4"},{"s":"751503149962","h":"מאלי","e":"Mali","g":"טריכום","c":"s","cat":"T22/C4"},{"s":"7290019131663","h":"מד דאג","e":"Med Dag","g":null,"c":"i","cat":"T22/C4"},{"s":"7290120973060","h":"מדיין","e":"Medellin","g":null,"c":"s","cat":"T22/C4"},{"s":"701220280998","h":"מובה","e":"Mova","g":"גרינקום","c":"i","cat":"T10/C10"},{"s":"789232175082","h":"מובה מיני","e":"Mova Mini","g":"גרינקום","c":"i","cat":"T10/C10"},{"s":"7290121713559","h":"מיהבי","e":"MiaB","g":"קרונוס","c":"s","cat":"T22/C4"},{"s":"7290120977433","h":"מייב","e":"Mave","g":null,"c":"i","cat":"T10/C10"},{"s":"7290019613046","h":"מימוסה","e":"Mimosa","g":"טוגדר","c":"s","cat":"T22/C4"},{"s":"7290020202833","h":"נאיה מיני","e":"Naya Mini","g":null,"c":"i","cat":"T22/C4"},{"s":"7290120972421","h":"נבאחו","e":"Navajo","g":"קוטניי קולטיבר","c":"s","cat":"T22/C4"},{"s":"7290119522446","h":"נוקס","e":"Nox","g":"גרינמד","c":"i","cat":"T22/C4"},{"s":"7290121718059","h":"ניל","e":"Nile","g":"קרונוס","c":"h","cat":"T22/C4"},{"s":"7290119523177","h":"נימבוס מיני","e":"Nimbus Mini","g":"גרינמד","c":"i","cat":"T22/C4"},{"s":"7290019839576","h":"נקסוס","e":"Nexus","g":null,"c":"s","cat":"T22/C4"},{"s":"720158423109","h":"ס.קרלה","e":"S.Krla","g":"קולטור דס סומטס","c":"i","cat":"T22/C4"},{"s":"7290020108401","h":"סאטורן","e":"Saturn","g":"טוגדר","c":"h","cat":"T22/C4"},{"s":"751503150241","h":"סוויפ","e":"Swip","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"783214545337","h":"סולו דיטו","e":"Solo Dito","g":"מדוקאן","c":"h","cat":"T22/C4"},{"s":"667758921652","h":"סי ג'יי","e":"CJ","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"7290020576002","h":"סי.אי.","e":"C.E.","g":"קנאפארמה","c":"s","cat":"T22/C4"},{"s":"7290120973367","h":"סי.אם.קיי איי אל","e":"CMK IL","g":"קנדוק","c":"i","cat":"T22/C4"},{"s":"7290020349507","h":"סי.בי.אר 23","e":"CBR 23","g":"קנאבר","c":"h","cat":"T22/C4"},{"s":"7290120973237","h":"סי.סי.קיי","e":"C.C.K","g":"פרפלפארם","c":"h","cat":"T22/C4"},{"s":"7290121714457","h":"סיטרה הייז","e":"Citra Haze","g":null,"c":"s","cat":"T10/C10"},{"s":"7290019675464","h":"סנו-לוטוס","e":"Snow-Lotus","g":"קרונוס","c":"i","cat":"T22/C4"},{"s":"7290120972490","h":"סנטו","e":"Santo","g":"קוטס קאנה","c":"i","cat":"T22/C4"},{"s":"7290121713009","h":"ספייס סי קי מאוזן","e":"Space CK Balanced","g":null,"c":"h","cat":"T10/C10"},{"s":"7290019217343","h":"ספייס סי קיי","e":"Space CK","g":"קרונוס","c":"h","cat":"T22/C4"},{"s":"7290121490504","h":"עמר","e":"Omer","g":"גרינמד","c":"i","cat":"T22/C4"},{"s":"7290112211286","h":"פאט יו","e":"Fat.U","g":"מיראקל וואלי","c":"s","cat":"T22/C4"},{"s":"7290121715201","h":"פוגסה","e":"Pogsa","g":"קרונוס","c":"h","cat":"T22/C4"},{"s":"7290120972971","h":"פוראקה","e":"Purake","g":"קוטניי קולטיבר","c":"i","cat":"T22/C4"},{"s":"751503150029","h":"פזו","e":"Pezzo","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"7290020504104","h":"פי או","e":"PO","g":"פלאנטק","c":"h","cat":"T22/C4"},{"s":"7290020504159","h":"פי או מיני","e":"PO Mini","g":"פלאנטק","c":"h","cat":"T22/C4"},{"s":"7290119523146","h":"פי.דבליו","e":"P.W","g":"מדיקן איקס","c":"s","cat":"T22/C4"},{"s":"7290121490214","h":"פיוז'ן","e":"Fusion","g":null,"c":"s","cat":"T22/C4"},{"s":"7290020725820","h":"פיורה","e":"Fiore","g":"קאסה די פיורה","c":"i","cat":"T22/C4"},{"s":"7290120975071","h":"פילו","e":"Pilo","g":"קוטס קאנה","c":"i","cat":"T22/C4"},{"s":"7290019675013","h":"פינק שרב","e":"Pink Sherb","g":"קרונוס","c":"i","cat":"T22/C4"},{"s":"7290020202260","h":"פרפל דידי","e":"Purple DD","g":null,"c":"i","cat":"T22/C4"},{"s":"7290020202222","h":"פרפל דידי מיני","e":"Purple DD Mini","g":null,"c":"i","cat":"T22/C4"},{"s":"7290120977679","h":"פרפל צ'אנג סמול","e":"Purple Chung Small","g":null,"c":"s","cat":"T22/C4"},{"s":"7290121713450","h":"פרפל קוש","e":"Purple Kush","g":null,"c":"i","cat":"T22/C4"},{"s":"7290121717809","h":"צ'אמפה","e":"Champe","g":"קרונוס","c":"i","cat":"T22/C4"},{"s":"7290120975194","h":"צ'אפה","e":"Chapa","g":"פרדייס ואלי","c":"i","cat":"T22/C4"},{"s":"751503149900","h":"צ'י","e":"Chi","g":"טריכום","c":"h","cat":"T22/C4"},{"s":"7290120973121","h":"ק.ג'קי","e":"Q.Jackie","g":"קנדוק","c":"h","cat":"T10/C10"},{"s":"7290120971899","h":"קאי","e":"Kai","g":"י.ג.ש ירוק ירוק","c":"i","cat":"T22/C4"},{"s":"720158422911","h":"קאלי סגאנק","e":"Cali Sgunk","g":"גרינקום","c":"i","cat":"T22/C4"},{"s":"7290120972551","h":"קאפ ג'אן","e":"Cap Jun","g":"פרפלפארם","c":"i","cat":"T22/C4"},{"s":"7290120973299","h":"קאפ ג'אן מיניז","e":"Cap Jun Miniz","g":"פרפלפארם","c":"i","cat":"T22/C4"},{"s":"751503150487","h":"קארבו","e":"Carbo","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"7290120975217","h":"קויה","e":"Coya","g":"קוטניי קוואנטום","c":"s","cat":"T22/C4"},{"s":"7290020349927","h":"קונגו","e":"Congo","g":null,"c":"i","cat":"T22/C4"},{"s":"7290019217770","h":"קי ליימז פאנץ'","e":"Key Limez Punch","g":"קרונוס","c":"s","cat":"T22/C4"},{"s":"7290020504005","h":"קיו","e":"Q","g":"פלאנטק","c":"i","cat":"T22/C4"},{"s":"7290020725295","h":"קיי פי מיני","e":"KP Mini","g":"פלאנטק","c":"h","cat":"T22/C4"},{"s":"720158246333","h":"קמירו","e":"Kamiro","g":"טריכום","c":"h","cat":"T22/C4"},{"s":"7290019343059","h":"קנטארה","e":"Cantare","g":"מדוקאן","c":"s","cat":"T3/C15"},{"s":"751503150265","h":"ראדר","e":"Rader","g":"טריכום","c":"h","cat":"T22/C4"},{"s":"7290020349484","h":"רובן","e":"Ruben","g":"גרינמד","c":"s","cat":"T22/C4"},{"s":"7290020149305","h":"ריינ. בו פי","e":"Rainbow P","g":"אוונט","c":"s","cat":"T22/C4"},{"s":"789232176027","h":"רינץ' איקס","e":"Rinch X","g":"גרינקום","c":"h","cat":"T22/C4"},{"s":"743407972456","h":"ריקוטי","e":"Ricotti","g":"טריכום","c":"i","cat":"T22/C4"},{"s":"7290019217701","h":"רפאל","e":"Raphael","g":"קרונוס","c":"i","cat":"T22/C4"},{"s":"7290120977235","h":"שביט מיני","e":"Shavit Mini","g":null,"c":"i","cat":"T22/C4"},{"s":"7290114072182","h":"תכלת","e":"Tchelet","g":"שיח","c":"s","cat":"T22/C4"},{"s":"7290114074155","h":"תכלת רליף","e":"Tchelet Relief","g":"שיח","c":"s","cat":"T18/C3"}];
+const GROWERS = ["אוונט", "אול ניישנס", "אורגניגרם", "גרינטון", "גרינמד", "גרינקום", "דציבל", "טוגדר", "טריכום", "י.ג.ש ירוק ירוק", "מדוקאן", "מדיקן איקס", "מיל קריק גרוות'", "מיראקל וואלי", "נובל", "סיקסטי סבן סינס", "פלאנטק", "פרדייס ואלי", "פרפלפארם", "קאסה די פיורה", "קוטניי קוואנטום", "קוטניי קולטיבר", "קוטס קאנה", "קולטור דס סומטס", "קנאבר", "קנאדו", "קנאפארמה", "קנדוק", "קרונוס", "שיח"];
+PRODUCTS.sort((a,b)=>a.h.localeCompare(b.h,"he"));
+const BY_SKU = Object.fromEntries(PRODUCTS.map(p=>[p.s,p]));
+const TYPE_HE = {i:"אינדיקה", s:"סאטיבה", h:"היבריד"};
+
+const O = {
+  sex:[["m","גבר"],["f","אישה"]],
+  age:[["18-24","18–24"],["25-34","25–34"],["35-44","35–44"],["45-54","45–54"],["55-64","55–64"],["65+","65+"]],
+  years:[["<1","פחות משנה"],["1-3","1–3 שנים"],["3-5","3–5 שנים"],["5+","יותר מ־5 שנים"]],
+  license:[["T22/C4","T22/C4"],["T20/C4","T20/C4"],["T15/C3","T15/C3"],["T10/C2","T10/C2"],["T3/C15","T3/C15"],["T1/C20","T1/C20"],["other","אחר"]],
+  uses:[["pain","כאב"],["sleep","שינה"],["anxiety","לחץ וחרדה"],["ptsd","פוסט טראומה"],["mood","מצב רוח"],["calm","הרפיית הגוף והשרירים"],["appetite","תיאבון"],["nausea","בחילה"],["focus","ריכוז וקשב"],["other","אחר"]],
+  times:[["morning","בוקר"],["noon","צהריים"],["evening","ערב"],["night","לפני השינה"]],
+  freq:[["some","לא כל יום"],["1","פעם ביום"],["2-3","2–3 פעמים"],["4+","4 פעמים ומעלה"]],
+  methods:[["joint","ג'וינט"],["pipe","מקטרת"],["bong","באנג"],["vape","וופורייזר (אידוי)"]],
+  flavors:[["citrus","הדרי (לימון, תפוז)"],["fruity","פירותי"],["sweet","מתוק"],["cookie","עוגייה או קינוח"],["earthy","אדמתי"],["pine","אורן"],["herbal","עשבי"],["floral","פרחוני"],["spicy","חריף או פלפלי"],["diesel","דלק (דיזל)"],["cheese","גבינתי"],["any","לא משנה לי"]],
+  place:[["body","בעיקר בגוף"],["both","גם וגם"],["head","בעיקר בראש"],["any","לא משנה לי"]],
+  energy:[["sleepy","מרדים"],["calm","מרגיע"],["balanced","מאוזן"],["up","מעורר"],["any","לא משנה לי"]],
+  strength:[["mild","עדין"],["medium","בינוני"],["strong","חזק"],["any","לא משנה לי"]],
+  avoid:[["daysleep","עייפות או נמנום ביום"],["anxiety","לחץ או חרדה"],["racing","דופק מהיר"],["munchies","רעב חזק"],["dry","יובש בפה או בעיניים"],["fog","ראש כבד או מעורפל"],["none","אין משהו מיוחד"]],
+  budget:[["<200","עד 200 ₪"],["200-300","200–300 ₪"],["300-400","300–400 ₪"],["400+","400 ₪ ומעלה"],["any","לא משנה לי"]],
+  priorities:[["effect","שיעזור לי"],["taste","טעם וריח"],["price","מחיר"],["grower","מגדל שאני סומך עליו"],["stock","שיהיה תמיד במלאי"],["norad","לא עבר הקרנה"],["indoor","גידול בפנים (אינדור)"],["consistency","שכל שקית תהיה אותו דבר"]],
+  verdict:[["like","אהבתי"],["unsure","לא בטוח"],["dislike","לא אהבתי"]],
+  eff:[["0","לא עזר"],["1","קצת"],["2","עזר"],["3","עזר מאוד"]],
+  bothered:[["no","לא, כלום"],["little","כן, משהו קל"],["much","כן, וזה הפריע"],["stopped","כן, ובגלל זה הפסקתי"]],
+  sidefx:[["drymouth","יובש בפה"],["dryeyes","עיניים יבשות או אדומות"],["anxiety","לחץ, חרדה או פרנויה"],["racing","דופק מהיר"],["dizzy","סחרחורת"],["fog","ראש כבד או מעורפל"],["sleepy","נרדמתי כשלא רציתי"],["munchies","רעב חזק"],["cough","שיעול או צריבה בגרון"],["headache","כאב ראש"],["taste","טעם או ריח לא נעימים"],["nextday","עייפות למחרת"],["other","משהו אחר"]],
+  buys:[["1","פעם אחת"],["2-3","2–3 פעמים"],["4+","4 פעמים ומעלה"]],
+  when:[["month","בחודש האחרון"],["half","בחצי השנה האחרונה"],["older","לפני יותר מחצי שנה"]],
+  pleasant:[["yes","נעימים"],["meh","ככה־ככה"],["no","לא נעימים"]],
+  strength2:[["mild","עדין"],["medium","בינוני"],["strong","חזק"],["toostrong","חזק מדי"]],
+  duration:[["<1","פחות משעה"],["1-2","1–2 שעות"],["2-4","2–4 שעות"],["4+","יותר מ־4 שעות"]],
+  quality:[["great","הכל היה תקין"],["toodry","יבש מדי"],["toowet","לח מדי"],["crumbs","הרבה פירורים או אבקה"],["harsh","עשן חריף או צורב"],["stems","גבעולים או זרעים"]],
+  value:[["yes","כן"],["ok","בערך"],["no","לא"]],
+  batches:[["same","לא, תמיד אותו דבר"],["diff","כן, יש הבדל"]],
+  how:[["pharmacist","לפי הרוקח"],["stock","מה שיש במלאי"],["friends","לפי חברים"],["groups","קבוצות וואטסאפ או פייסבוק"],["sites","אתרים ואפליקציות"],["trial","ניסוי וטעייה"],["same","תמיד אותו זן"],["price","לפי מה שבמבצע"]],
+};
+O.tastes = O.flavors.filter(([v])=>v!=="any").concat([["dunno","לא זוכר"]]);
+O.place2 = O.place.filter(([v])=>v!=="any");
+O.energy2 = O.energy.filter(([v])=>v!=="any");
+const EXCL = new Set(["any","none","great","dunno"]);   /* choosing one of these clears the rest, and the reverse */
+const L = k => Object.fromEntries(O[k]);
+
+const STEPS = ["פתיחה","עליך","למה אתה משתמש","מה אתה אוהב","הזנים שלך","דירוג הזנים","השוואה","איך אתה בוחר","סיום"];
+const S = {
+  step:0, card:0, q:"", xname:"", focus:null,
+  profile:{sex:null,age:null,years:null,license:"T22/C4",licenseOther:"",licenseTouched:false,uses:[],usesOther:"",times:[],freq:null,methods:[],
+    flavors:[],place:null,energy:null,strength:null,avoid:[],budget:null,priorities:[],growers:[]},
+  picks:[], ratings:{}, deepOpen:{}, best:null, worst:null,
+  choose:{how:[],frustration:"",wish:""}, contact:"", code:null, xcount:0,
+  meta:{started:null,finished:null}
+};
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function getP(path){ return path.split(".").reduce((o,k)=>o==null?o:o[k], S); }
+function setP(path, v){ const ks=path.split("."); const last=ks.pop(); const o=ks.reduce((o,k)=>o[k], S); o[last]=v; }
+
+function chips(path, key, opt={}){
+  const val = getP(path); const multi=Array.isArray(val); const max=opt.max||0;
+  return `<div class="chips ${opt.wrap||""}">${O[key].map(([v,l])=>{
+    const on = multi ? val.includes(v) : val===v;
+    const dis = multi && max && !on && val.length>=max;
+    return `<button type="button" class="chip ${opt.cls||""}" data-p="${path}" data-v="${esc(v)}" aria-pressed="${on}" ${dis?"disabled":""}>${esc(l)}</button>`;
+  }).join("")}</div>`;
+}
+function chipsFrom(path, list){
+  const val=getP(path);
+  return `<div class="chips">${list.map(([v,l])=>`<button type="button" class="chip" data-p="${path}" data-v="${esc(v)}" aria-pressed="${Array.isArray(val)?val.includes(v):val===v}">${esc(l)}</button>`).join("")}</div>`;
+}
+function otherBox(path, ph){ return `<input class="txt" type="text" maxlength="80" data-t="${path}" placeholder="${esc(ph)}" value="${esc(getP(path)||"")}">`; }
+function hint(t){ return `<p class="hint">${t}</p>`; }
+function q(title, body, sub){ return `<div class="q"><div class="qt">${title}${sub?` <small>${sub}</small>`:""}</div>${body}</div>`; }
+
+function pickName(pk){ return pk.sku ? BY_SKU[pk.sku].h : pk.name; }
+function pickSub(pk){ if(!pk.sku) return "זן שלא ברשימה"; const p=BY_SKU[pk.sku]; return `<span class="en">${esc(p.e)}</span>${p.g?` · ${esc(p.g)}`:""}`; }
+function useLabel(u){ if(u==="general") return "באופן כללי"; if(u==="other") return S.profile.usesOther.trim()||"אחר"; return L("uses")[u]; }
+function useKeys(){ return S.profile.uses.length ? S.profile.uses : ["general"]; }
+
+function ensureRating(key){
+  if(!S.ratings[key]) S.ratings[key]={verdict:null,stars:null,effect:{},bothered:null,sidefx:[],sidefxOther:"",buys:null,when:null,note:"",
+    deep:{tastes:[],pleasant:null,place:null,energy:null,strength:null,times:[],duration:null,quality:[],value:null,batches:null}};
+  return S.ratings[key];
+}
+
+/* ---------- screens ---------- */
+function vWelcome(){
+  return `<div class="welcome">
+    <h1>מה עובד לך?</h1>
+    <p class="p">שאלון קצר למטופלי קנאביס רפואי. מספרים לנו על הזנים שניסית, מה עזר ומה פחות, ועוזרים לבנות התאמה חכמה של זנים לכל מטופל.</p>
+    <ul class="facts">
+      <li><span class="ic">1</span><span><b>אנונימי.</b> בלי שם ובלי הרשמה. בסוף אפשר להשאיר טלפון, רק אם רוצים.</span></li>
+      <li><span class="ic">2</span><span><b>6–8 דקות.</b> כמעט הכל בלחיצות. אם יוצאים באמצע, אפשר לחזור ולהמשיך מאותו טלפון.</span></li>
+      <li><span class="ic">3</span><span><b>בסוף תקבל סיכום אישי</b> של מה שעובד לך ומה פחות.</span></li>
+    </ul>
+    <p class="small">בלחיצה על "מסכים ומתחיל" אתה מאשר שאתה בן 18 ומעלה, ושהתשובות ישמשו, בלי פרטים מזהים, לבניית מערכת ההתאמה. זה לא ייעוץ רפואי ולא מחליף את הרופא.<br>השאלון כתוב בלשון זכר לשם הנוחות, ומיועד לכולם.</p>
+  </div>`;
+}
+function vAbout(){
+  const P="profile", pr=S.profile;
+  return `<div class="screen">
+    <div class="lead"><h2>קצת עליך</h2><p>כדי להבין מי אתה. אפשר לדלג על כל שאלה.</p></div>
+    ${q("מין",chips(P+".sex","sex"))}
+    ${q("גיל",chips(P+".age","age"))}
+    ${q("כמה זמן אתה מטופל בקנאביס?",chips(P+".years","years"))}
+    ${q("איזו קטגוריה כתובה ברישיון שלך?",chips(P+".license","license")
+      +(pr.license==="other"?otherBox(P+".licenseOther","מה כתוב ברישיון?"):"")
+      +hint("T הוא אחוז ה־THC ו־C הוא אחוז ה־CBD. סימנו מראש T22/C4, כמו אצל רוב המטופלים. אם אתה לא בטוח, אפשר להשאיר."))}
+  </div>`;
+}
+function vWhy(){
+  const P="profile", pr=S.profile;
+  return `<div class="screen">
+    <div class="lead"><h2>למה אתה משתמש</h2><p>זה מה שיקבע איזה זן מתאים לך.</p></div>
+    ${q("במה הקנאביס אמור לעזור לך?",chips(P+".uses","uses")
+      +(pr.uses.includes("other")?otherBox(P+".usesOther","במה עוד? כתוב בקצרה"):"")
+      +hint("בהמשך נשאל על כל זן כמה הוא עזר בכל אחד מאלה."),"(אפשר כמה)")}
+    ${q("מתי ביום אתה משתמש?",chips(P+".times","times"),"(אפשר כמה)")}
+    ${q("כמה פעמים ביום, בערך?",chips(P+".freq","freq"))}
+    ${q("איך אתה צורך?",chips(P+".methods","methods"),"(אפשר כמה)")}
+  </div>`;
+}
+function vLikes(){
+  const P="profile";
+  return `<div class="screen">
+    <div class="lead"><h2>מה אתה אוהב</h2><p>ההעדפות שלך באופן כללי, לא על זן מסוים.</p></div>
+    ${q("אילו טעמים וריחות אתה אוהב?",chips(P+".flavors","flavors"),"(אפשר כמה)")}
+    ${q("איפה אתה אוהב להרגיש את ההשפעה?",chips(P+".place","place")
+      +hint("בגוף: כבדות והרפיה בשרירים. בראש: שינוי במחשבות, במצב הרוח ובתחושה."))}
+    ${q("איזו השפעה אתה מעדיף?",chips(P+".energy","energy")
+      +hint("מרדים: עוזר להירדם. מרגיע: רגוע אבל ער. מעורר: נותן אנרגיה."))}
+    ${q("כמה חזק אתה אוהב שזה ירגיש?",chips(P+".strength","strength"))}
+    ${q("יש תופעות שאתה רוצה להימנע מהן?",chips(P+".avoid","avoid",{cls:"bad"}),"(אפשר כמה)")}
+    ${q("כמה אתה מוכן לשלם לשקית של 10 גרם?",chips(P+".budget","budget"))}
+    ${q("מה הכי חשוב לך כשאתה בוחר זן?",chips(P+".priorities","priorities",{max:3})
+      +hint("הקרנה היא חיטוי בקרינה שעוברים חלק מהזנים. יש מטופלים שמרגישים שהיא פוגעת בטעם ומעדיפים בלי."),`(עד 3 · בחרת ${S.profile.priorities.length})`)}
+    ${q("יש מגדלים שאתה סומך עליהם?",chipsFrom(P+".growers",GROWERS.map(g=>[g,g])),"(רשות)")}
+  </div>`;
+}
+function vPicks(){
+  const n=S.picks.length;
+  const msg = n>=5 ? `מעולה, ${n} זנים. אפשר להוסיף עוד.` : `בחרת ${n}. ${n<2?"צריך לפחות 2.":`עוד ${5-n} ויש לנו תמונה טובה.`}`;
+  return `<div class="screen">
+    <div class="lead"><h2>אילו זנים ניסית?</h2><p>בחר 5–6 זנים או יותר שאתה זוכר. גם כאלה שאהבת וגם כאלה שלא. זנים שלא עבדו חשובים בדיוק כמו אלה שכן.</p></div>
+    <div class="q"><div class="qt num" id="pickMsg">${msg}</div>
+      <div class="picked">${S.picks.map(pk=>`<span class="pchip">${esc(pickName(pk))}<button type="button" data-unpick="${pk.key}" aria-label="הסר">×</button></span>`).join("")}</div></div>
+    <input class="search" id="search" type="search" placeholder="חיפוש זן בעברית או באנגלית" value="${esc(S.q)}" autocomplete="off">
+    <div class="plist" id="plist">${plistHTML()}</div>
+    <div class="q"><div class="qt">זן שלא ברשימה?</div>
+      <div class="addrow"><input class="txt" id="xname" type="text" maxlength="60" placeholder="שם הזן" value="${esc(S.xname)}"><button type="button" class="ghost" id="xadd">הוסף</button></div></div>
+  </div>`;
+}
+function plistHTML(){
+  const qq=S.q.trim().toLowerCase();
+  const rows=PRODUCTS.filter(p=>!qq||(p.h+" "+p.e+" "+(p.g||"")).toLowerCase().includes(qq)).map(p=>{
+    const on=S.picks.some(k=>k.sku===p.s);
+    return `<button type="button" class="prow" data-pick="${p.s}" aria-pressed="${on}"><span class="box">${on?"✓":""}</span>
+      <span><span class="nm">${esc(p.h)}</span><span class="sub"><span class="en">${esc(p.e)}</span>${p.g?`<span>· ${esc(p.g)}</span>`:""}<span class="tag">${TYPE_HE[p.c]||""}</span>${p.cat?`<span class="tag">${esc(p.cat)}</span>`:""}</span></span></button>`;
+  });
+  return rows.length?rows.join(""):`<div class="prow" style="cursor:default">לא נמצא. אפשר להוסיף אותו למטה כזן שלא ברשימה.</div>`;
+}
+function deepHTML(key){
+  const R="ratings."+key+".deep", r=S.ratings[key];
+  const multi = r.buys==="2-3"||r.buys==="4+";
+  return `<div class="reveal">
+    ${q("איזה טעם וריח היו לו?",chips(R+".tastes","tastes"),"(אפשר כמה)")}
+    ${q("הטעם והריח היו",chips(R+".pleasant","pleasant"))}
+    ${q("איפה הרגשת אותו?",chips(R+".place","place2"))}
+    ${q("איך הוא השפיע עליך?",chips(R+".energy","energy2"))}
+    ${q("כמה חזק הוא הרגיש?",chips(R+".strength","strength2"))}
+    ${q("מתי ביום הוא עבד לך הכי טוב?",chips(R+".times","times"),"(אפשר כמה)")}
+    ${q("כמה זמן ההשפעה החזיקה?",chips(R+".duration","duration"))}
+    ${q("איך הייתה השקית?",chips(R+".quality","quality"),"(אפשר כמה)")}
+    ${q("שווה את המחיר?",chips(R+".value","value"))}
+    ${multi?q("הרגשת הבדל בין שקיות שונות שלו?",chips(R+".batches","batches")):""}
+  </div>`;
+}
+function vCard(){
+  const pk=S.picks[S.card]; const key=pk.key; const r=ensureRating(key); const R="ratings."+key;
+  const stars=[1,2,3,4,5].map(n=>`<button type="button" class="star ${r.stars&&n<=r.stars?"on":""}" data-stars="${key}" data-v="${n}" aria-label="${n} כוכבים">★</button>`).join("");
+  const eff=`<div class="effrows">${useKeys().map(u=>`<div class="effrow"><span class="lbl">${esc(useLabel(u))}</span>${chips(R+".effect."+u,"eff",{wrap:"seg"})}</div>`).join("")}</div>`;
+  const side = r.bothered && r.bothered!=="no" ? q("מה בדיוק?",chips(R+".sidefx","sidefx",{cls:"bad"})
+      +(r.sidefx.includes("other")?otherBox(R+".sidefxOther","מה עוד? כתוב בקצרה"):""),"(סמן כל מה שהיה)") : "";
+  const open=!!S.deepOpen[key];
+  return `<div class="screen">
+    <div class="card">
+      <div class="strainhead"><h3>${esc(pickName(pk))}</h3><div class="sub">${pickSub(pk)}</div></div>
+      ${q("מה דעתך עליו?",`<div class="grid3">${O.verdict.map(([v,l])=>`<button type="button" class="big ${v}" data-p="${R}.verdict" data-v="${v}" aria-pressed="${r.verdict===v}">${l}</button>`).join("")}</div>`)}
+      ${q("כמה כוכבים היית נותן לו?",`<div class="stars">${stars}</div>`)}
+      ${q("כמה הוא עזר?",eff,"(אם לא בדקת משהו, דלג)")}
+      ${q("היו תופעות לוואי או משהו לא נעים?",chips(R+".bothered","bothered"))}
+      ${side}
+      ${q("כמה פעמים קנית אותו?",chips(R+".buys","buys"))}
+      ${q("מתי השתמשת בו לאחרונה?",chips(R+".when","when"))}
+      ${q("משהו להוסיף?",`<textarea data-t="${R}.note" maxlength="500" placeholder="במילים שלך, רשות">${esc(r.note)}</textarea>`)}
+      ${open?deepHTML(key):`<button type="button" class="more" data-deep="${key}">+ ספר עוד על הזן (30 שניות)</button>`}
+    </div>
+  </div>`;
+}
+function vCompare(){
+  const rated=S.picks.filter(pk=>S.ratings[pk.key]&&S.ratings[pk.key].verdict);
+  const opts=rated.map(pk=>[pk.key,pickName(pk)]);
+  const deepAsk=[S.best,S.worst].filter(Boolean).filter((k,i,a)=>a.indexOf(k)===i).map(k=>{
+    const pk=S.picks.find(x=>x.key===k); const label=k===S.best?"עזר הכי הרבה":"עזר הכי פחות";
+    return `<div class="card"><div class="strainhead"><h3>${esc(pickName(pk))}</h3><div class="sub">${label}</div></div>
+      ${S.deepOpen[k]?deepHTML(k):`<button type="button" class="more" data-deep="${k}">+ ספר עוד על הזן הזה (30 שניות)</button>`}</div>`;
+  }).join("");
+  return `<div class="screen">
+    <div class="lead"><h2>השוואה</h2><p>מבין הזנים שדירגת:</p></div>
+    ${q("איזה זן עזר לך הכי הרבה?",chipsFrom("best",opts))}
+    ${q("ואיזה עזר הכי פחות?",chipsFrom("worst",opts.filter(([k])=>k!==S.best)))}
+    ${deepAsk?`<p class="hint">שני הזנים האלה הכי מלמדים אותנו. אם יש לך עוד חצי דקה:</p>${deepAsk}`:""}
+  </div>`;
+}
+function vChoose(){
+  return `<div class="screen">
+    <div class="lead"><h2>איך אתה בוחר זן</h2><p>כמעט סיימנו.</p></div>
+    ${q("איך אתה בוחר זן היום?",chips("choose.how","how"),"(אפשר כמה)")}
+    ${q("מה הכי מתסכל אותך בבחירת זן?",`<textarea data-t="choose.frustration" maxlength="1000" placeholder="במילים שלך, רשות">${esc(S.choose.frustration)}</textarea>`)}
+    ${q("מה היה עוזר לך לבחור טוב יותר?",`<textarea data-t="choose.wish" maxlength="1000" placeholder="רשות">${esc(S.choose.wish)}</textarea>`)}
+  </div>`;
+}
+function summaryHTML(){
+  const rated=S.picks.map(pk=>({pk,r:S.ratings[pk.key]})).filter(x=>x.r&&x.r.verdict);
+  const best=S.picks.find(x=>x.key===S.best), worst=S.picks.find(x=>x.key===S.worst);
+  const liked=rated.filter(x=>x.r.verdict==="like");
+  const cnt=(arr)=>{const m={};arr.forEach(k=>m[k]=(m[k]||0)+1);return Object.entries(m).sort((a,b)=>b[1]-a[1]);};
+  const perUse=useKeys().filter(u=>u!=="general").map(u=>{
+    const c=rated.filter(x=>x.r.effect[u]!=null).sort((a,b)=>(+b.r.effect[u])-(+a.r.effect[u]));
+    return c.length && +c[0].r.effect[u]>=2 ? [`הכי עזר ל${esc(useLabel(u))}`, esc(pickName(c[0].pk))] : null;
+  }).filter(Boolean);
+  const fx=cnt(rated.flatMap(x=>x.r.sidefx).filter(k=>k!=="other")).slice(0,3).map(([k])=>L("sidefx")[k]);
+  const tastes=cnt(liked.flatMap(x=>x.r.deep.tastes).filter(k=>k!=="dunno")).slice(0,3).map(([k])=>L("tastes")[k]);
+  const rows=[
+    best?["הזן שהכי עזר לך",esc(pickName(best))]:null,
+    worst?["הזן שהכי פחות עזר",esc(pickName(worst))]:null,
+    ...perUse,
+    tastes.length?["טעמים בזנים שאהבת",tastes.join(", ")]:null,
+    fx.length?["מה הכי הפריע לך",fx.join(", ")]:null,
+    ["דירגת",`${rated.length} זנים · אהבת ${liked.length}`],
+  ].filter(Boolean);
+  return `<div class="summary">${rows.map(([k,v])=>`<div class="row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")}
+    <p class="hint">זה סיכום של מה שענית, לא המלצה רפואית.</p></div>`;
+}
+function payload(){
+  const ratings=Object.fromEntries(S.picks.map(pk=>{ const r=JSON.parse(JSON.stringify(S.ratings[pk.key]||{}));
+    r.effect=Object.fromEntries(Object.entries(r.effect||{}).map(([u,v])=>[u,+v])); return [pk.key,r]; }));
+  return JSON.parse(JSON.stringify({profile:S.profile,picks:S.picks,ratings,best:S.best,worst:S.worst,choose:S.choose,meta:{...S.meta,version:SURVEY_VERSION}}));
+}
+async function post(table,row){
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/${table}`,{method:"POST",
+    headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":`Bearer ${SUPABASE_ANON_KEY}`,"Content-Type":"application/json","Prefer":"return=minimal"},
+    body:JSON.stringify(row)});
+  if(!r.ok) throw new Error("HTTP "+r.status);
+}
+async function submit(){
+  if(S.sent) return;
+  if(!S.code){ const a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; S.code=Array.from({length:6},()=>a[Math.floor(Math.random()*a.length)]).join(""); }
+  S.meta.finished=new Date().toISOString();
+  if(LIVE) await post("responses",{code:S.code,version:SURVEY_VERSION,data:payload()});
+  S.sent=true;
+}
+async function sendContact(){
+  const msg=$("contactMsg"), btn=$("contactBtn");
+  const ph=S.contact.replace(/[^\d+]/g,"");
+  if(ph.replace(/\D/g,"").length<9){ msg.textContent="נראה שהמספר לא שלם."; return; }
+  btn.disabled=true;
+  try{ if(LIVE) await post("contacts",{phone:ph}); S.contactSent=true; render(); }
+  catch(e){ btn.disabled=false; msg.textContent="לא הצלחנו לשמור. בדוק שיש אינטרנט ונסה שוב."; }
+}
+function vDone(){
+  return `<div class="screen">
+    <div class="lead"><h2>תודה רבה!</h2><p>התשובות שלך יעזרו לבנות התאמה טובה יותר של זנים למטופלים.</p></div>
+    ${summaryHTML()}
+    ${q("הקוד האישי שלך",`<div class="code">${S.code}</div><p class="hint">הוא לא מזהה אותך. שמור אותו אם תרצה בעתיד לעדכן או למחוק את התשובות שלך.</p>`)}
+    ${q("רוצה לקבל התאמה אישית כשהמערכת תהיה מוכנה?",`<div class="addrow"><input class="txt" type="tel" id="contact" placeholder="מספר טלפון (רשות)" value="${esc(S.contact)}" inputmode="tel" ${S.contactSent?"disabled":""}><button type="button" class="ghost" id="contactBtn" ${S.contactSent?"disabled":""}>${S.contactSent?"נשמר ✓":"שמור"}</button></div>
+      <p class="hint" id="contactMsg">הטלפון נשמר בנפרד ולא מקושר לתשובות שלך.</p>`)}
+    ${LIVE?"":`<details class="dev"><summary>לתומר בלבד: מה נשלח ל־Supabase (לא מופיע בדף החי)</summary><pre>${esc(JSON.stringify({code:S.code,version:SURVEY_VERSION,data:payload()},null,1))}</pre></details>`}
+  </div>`;
+}
+
+/* ---------- navigation ---------- */
+function canNext(){
+  const s=S.step;
+  if(s===2) return S.profile.uses.length>0 ? "" : "בחר לפחות דבר אחד שהקנאביס אמור לעזור בו";
+  if(s===4) return S.picks.length>=2 ? "" : "בחר לפחות 2 זנים";
+  if(s===5){ const r=S.ratings[S.picks[S.card].key]; return r&&r.verdict ? "" : "בחר אהבתי / לא בטוח / לא אהבתי"; }
+  if(s===6){ const n=S.picks.filter(pk=>S.ratings[pk.key]&&S.ratings[pk.key].verdict).length; if(n<2) return ""; return S.best&&S.worst ? "" : "בחר את הזן שעזר הכי הרבה ואת זה שעזר הכי פחות"; }
+  return "";
+}
+function go(step){ S.step=step; render(); window.scrollTo({top:0}); }
+function next(){
+  if(canNext()) return;
+  if(S.step===0){ if(!S.meta.started) S.meta.started=new Date().toISOString(); return go(1); }
+  if(S.step===4){ S.card=0; S.picks.forEach(pk=>ensureRating(pk.key)); return go(5); }
+  if(S.step===5){ if(S.card<S.picks.length-1){ S.card++; render(); window.scrollTo({top:0}); return; } return go(6); }
+  if(S.step===7){
+    const nb=$("nextBtn"), why=$("why"); nb.disabled=true; nb.textContent="שולח...";
+    submit().then(()=>go(8)).catch(()=>{ nb.disabled=false; nb.textContent="נסה שוב"; why.hidden=false; why.textContent="השליחה לא הצליחה. בדוק שיש אינטרנט ונסה שוב."; });
+    return;
+  }
+  if(S.step<8) return go(S.step+1);
+}
+function back(){
+  if(S.step===5 && S.card>0){ S.card--; render(); window.scrollTo({top:0}); return; }
+  if(S.step===6){ S.card=Math.max(0,S.picks.length-1); return go(5); }
+  if(S.step>0) go(S.step-1);
+}
+
+function render(){
+  const s=S.step;
+  $("top").hidden = s===0;
+  $("nav").hidden = false;
+  if(s>0){
+    const within = s===5 ? ` · זן ${S.card+1} מתוך ${S.picks.length}` : "";
+    $("pname").textContent = STEPS[s]+within;
+    $("pcount").textContent = `שלב ${s} מתוך 8`;
+    const frac = s===5 ? (5 + (S.card+1)/Math.max(1,S.picks.length) - 1)/8 : s/8;
+    $("pbar").style.width = Math.round(frac*100)+"%";
+  }
+  const views=[vWelcome,vAbout,vWhy,vLikes,vPicks,vCard,vCompare,vChoose,vDone];
+  $("app").innerHTML = views[s]();
+  $("backBtn").hidden = s===0 || s===8;
+  const nb=$("nextBtn");
+  nb.textContent = s===0 ? "מסכים ומתחיל" : s===7 ? "סיום" : s===8 ? "סיימתי" : s===5 && S.card<S.picks.length-1 ? "לזן הבא" : "המשך";
+  if(s===8){ nb.disabled=true; nb.textContent=LIVE?"התשובות נשמרו ✓":"תצוגה מקדימה: לא נשלח"; $("why").hidden=true; }
+  else { const why=canNext(); nb.disabled=!!why; $("why").hidden=!why; $("why").textContent=why; }
+  if(s===4) bindPicks();
+  if(s===8){ const c=$("contact"); if(c) c.addEventListener("input",e=>{S.contact=e.target.value;}); }
+  if(S.focus){ const el=document.querySelector(`[data-t="${S.focus}"]`); S.focus=null; if(el) el.focus(); }
+  save();
+}
+function save(){ if(!LIVE) return; try{ localStorage.setItem(SAVE_KEY,JSON.stringify({t:Date.now(),S})); }catch(e){} }
+function restore(){
+  if(!LIVE) return;
+  try{ const o=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");
+    if(!o||!o.S) return;
+    if(!o.S.sent && Date.now()-o.t>14*864e5) return;   /* stale unfinished run: start fresh */
+    Object.assign(S,o.S); S.focus=null;
+  }catch(e){}
+}
+
+function bindPicks(){
+  const se=$("search"); se.addEventListener("input",e=>{ S.q=e.target.value; $("plist").innerHTML=plistHTML(); });
+  const xn=$("xname"); xn.addEventListener("input",e=>{ S.xname=e.target.value; });
+  const add=()=>{ const n=S.xname.trim(); if(!n) return; S.xcount++; S.picks.push({key:"x"+S.xcount,sku:null,name:n}); S.xname=""; render(); };
+  $("xadd").addEventListener("click",add);
+  xn.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); add(); } });
+}
+
+document.addEventListener("click",e=>{
+  const t=e.target.closest("button"); if(!t) return;
+  if(t.id==="nextBtn") return next();
+  if(t.id==="backBtn") return back();
+  if(t.id==="contactBtn") return sendContact();
+  if(t.dataset.p){
+    const path=t.dataset.p, v=t.dataset.v, cur=getP(path);
+    if(Array.isArray(cur)){
+      const i=cur.indexOf(v);
+      if(i>=0){
+        cur.splice(i,1);
+        if(v==="other") setP(path+"Other","");
+        if(path==="profile.uses") Object.values(S.ratings).forEach(r=>{ delete r.effect[v]; });
+      } else {
+        if(EXCL.has(v)) cur.splice(0,cur.length);
+        else EXCL.forEach(x=>{ const j=cur.indexOf(x); if(j>=0) cur.splice(j,1); });
+        cur.push(v);
+        if(v==="other") S.focus=path+"Other";
+      }
+      if(path==="profile.uses" && cur.length) Object.values(S.ratings).forEach(r=>{ delete r.effect.general; });
+    } else {
+      const nv = (cur===v && path!=="profile.license") ? null : v;
+      setP(path, nv);
+      if(path==="profile.license"){ S.profile.licenseTouched=true; if(nv==="other") S.focus="profile.licenseOther"; else S.profile.licenseOther=""; }
+      if(path.endsWith(".bothered") && (nv==="no"||nv===null)){ setP(path.replace(/\.bothered$/,".sidefx"),[]); setP(path.replace(/\.bothered$/,".sidefxOther"),""); }
+      if(path.endsWith(".buys") && nv!=="2-3" && nv!=="4+") setP(path.replace(/\.buys$/,".deep.batches"),null);
+      if(path==="best" && S.worst===S.best) S.worst=null;
+    }
+    render(); return;
+  }
+  if(t.dataset.stars){ const r=S.ratings[t.dataset.stars], n=+t.dataset.v; r.stars = r.stars===n?null:n; render(); return; }
+  if(t.dataset.deep){ S.deepOpen[t.dataset.deep]=true; render(); return; }
+  if(t.dataset.pick){ const sku=t.dataset.pick; const i=S.picks.findIndex(k=>k.sku===sku);
+    if(i>=0) S.picks.splice(i,1); else S.picks.push({key:sku,sku,name:null});
+    render(); return; }
+  if(t.dataset.unpick){ const i=S.picks.findIndex(k=>k.key===t.dataset.unpick); if(i>=0) S.picks.splice(i,1); render(); return; }
+});
+document.addEventListener("input",e=>{
+  const el=e.target;
+  if(el.dataset.t){ setP(el.dataset.t, el.value); save(); }
+});
+
+$("previewNote").hidden=LIVE;
+restore();
+render();
+</script>
+
+</body></html>
