@@ -20,7 +20,7 @@ One line per finished step. On resume: read this, check what exists, don't rerun
   - PASS update responses (code=eq.TEST01) / contacts (phone=eq.0500000000): 401, 42501 permission denied (both)
   - PASS delete responses (code=eq.TEST01) / contacts (phone=eq.0500000000): 401, 42501 permission denied (both)
   - PASS `curl -I` live URL: 200
-- [ ] 4b. Test rows: Tomer deletes them in the dashboard (exactly 2: responses code TEST01; contacts phone 0500000000). Not done from here: no service key, by design.
+- [x] 4b. Verified 2026-09-25: no test rows, both tables empty. Test rows: Tomer deletes them in the dashboard (exactly 2: responses code TEST01; contacts phone 0500000000). Not done from here: no service key, by design.
 - [x] 5. Report sent to Tomer (live URL, tests, survey.html changes = 2b, 2d, 2e, 2f, 2c).
 - [x] 6. Tomer's update (2026-09-25): personal-code block removed from the thank-you screen (code still generated and sent); disclaimers added on welcome (medical, what we collect), side-effects question, phone field. No contact details. Questions and `survey-v1` unchanged. Live page byte-identical to index.html at ec47e8a (Pages built 14:46:55 UTC).
   - Supabase region is **ap-southeast-2 (Sydney)**, not Frankfurt as DEPLOY.md asked: `db.yernxedmokifcmpakzgd.supabase.co` → 2406:da1c:61c:d600:… (Cloudflare + Google DNS), in AWS ip-ranges 2406:da1c::/35 ap-southeast-2. So the page makes no storage-location claim; Tomer chose to add the EU line only after a move to a Frankfurt project.
