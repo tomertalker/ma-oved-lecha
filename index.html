@@ -119,12 +119,13 @@ textarea{min-height:84px}
 .facts li{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
 .facts .ic{width:28px;height:28px;border-radius:8px;background:var(--accent-soft);display:grid;place-items:center;font-weight:700;color:var(--accent);font-family:var(--font-head)}
 .small{font-size:14px;color:var(--muted)}
+.notes{display:grid;gap:8px}
+.notes p{margin:0}
 
 .summary{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:10px}
 .summary .row{display:grid;gap:2px}
 .summary .k{font-size:13px;color:var(--muted)}
 .summary .v{font-weight:700}
-.code{font-family:var(--font-head);font-size:28px;letter-spacing:.18em;direction:ltr;text-align:center;background:var(--sunk);border-radius:12px;padding:10px}
 details.dev{background:var(--preview);color:var(--preview-ink);border-radius:12px;padding:10px 12px;font-size:13px}
 details.dev pre{white-space:pre-wrap;word-break:break-word;direction:ltr;text-align:left;margin:8px 0 0;max-height:320px;overflow:auto}
 .effrows{display:grid;gap:14px}
@@ -257,7 +258,11 @@ function vWelcome(){
       <li><span class="ic">2</span><span><b>6–8 דקות.</b> כמעט הכל בלחיצות. אם יוצאים באמצע, אפשר לחזור ולהמשיך מאותו טלפון.</span></li>
       <li><span class="ic">3</span><span><b>בסוף תקבל סיכום אישי</b> של מה שעובד לך ומה פחות.</span></li>
     </ul>
-    <p class="small">בלחיצה על "מסכים ומתחיל" אתה מאשר שאתה בן 18 ומעלה, ושהתשובות ישמשו, בלי פרטים מזהים, לבניית מערכת ההתאמה. זה לא ייעוץ רפואי ולא מחליף את הרופא.<br>השאלון כתוב בלשון זכר לשם הנוחות, ומיועד לכולם.</p>
+    <div class="notes">
+      <p class="small"><b>לא ייעוץ רפואי.</b> השאלון והסיכום בסופו לא מחליפים את הרופא או הרוקח. אין לשנות זן או מינון בלי להתייעץ עם הרופא המטפל, ותמיד רק במסגרת הרישיון.</p>
+      <p class="small"><b>מה נאסף ולמה.</b> התשובות שלך לשאלון, ובסוף מספר טלפון רק אם תבחר להשאיר. התשובות אנונימיות ומשמשות רק לבנייה ולשיפור של מערכת ההתאמה.</p>
+    </div>
+    <p class="small">בלחיצה על "מסכים ומתחיל" אתה מאשר שאתה בן 18 ומעלה, ושהתשובות ישמשו, בלי פרטים מזהים, לבניית מערכת ההתאמה.<br>השאלון כתוב בלשון זכר לשם הנוחות, ומיועד לכולם.</p>
   </div>`;
 }
 function vAbout(){
@@ -344,7 +349,8 @@ function vCard(){
   const stars=[1,2,3,4,5].map(n=>`<button type="button" class="star ${r.stars&&n<=r.stars?"on":""}" data-stars="${key}" data-v="${n}" aria-label="${n} כוכבים">★</button>`).join("");
   const eff=`<div class="effrows">${useKeys().map(u=>`<div class="effrow"><span class="lbl">${esc(useLabel(u))}</span>${chips(R+".effect."+u,"eff",{wrap:"seg"})}</div>`).join("")}</div>`;
   const side = r.bothered && r.bothered!=="no" ? q("מה בדיוק?",chips(R+".sidefx","sidefx",{cls:"bad"})
-      +(r.sidefx.includes("other")?otherBox(R+".sidefxOther","מה עוד? כתוב בקצרה"):""),"(סמן כל מה שהיה)") : "";
+      +(r.sidefx.includes("other")?otherBox(R+".sidefxOther","מה עוד? כתוב בקצרה"):"")
+      +hint("אם התופעות קשות או מדאיגות, פנה לרופא המטפל."),"(סמן כל מה שהיה)") : "";
   const open=!!S.deepOpen[key];
   return `<div class="screen">
     <div class="card">
@@ -436,8 +442,8 @@ function vDone(){
   return `<div class="screen">
     <div class="lead"><h2>תודה רבה!</h2><p>התשובות שלך יעזרו לבנות התאמה טובה יותר של זנים למטופלים.</p></div>
     ${summaryHTML()}
-    ${q("הקוד האישי שלך",`<div class="code">${S.code}</div><p class="hint">הוא לא מזהה אותך. שמור אותו אם תרצה בעתיד לעדכן או למחוק את התשובות שלך.</p>`)}
     ${q("רוצה לקבל התאמה אישית כשהמערכת תהיה מוכנה?",`<div class="addrow"><input class="txt" type="tel" id="contact" placeholder="מספר טלפון (רשות)" value="${esc(S.contact)}" inputmode="tel" ${S.contactSent?"disabled":""}><button type="button" class="ghost" id="contactBtn" ${S.contactSent?"disabled":""}>${S.contactSent?"נשמר ✓":"שמור"}</button></div>
+      <p class="hint">נשתמש בטלפון רק כדי לעדכן אותך כשההתאמה האישית תהיה מוכנה. לא נעביר אותו לאף אחד.</p>
       <p class="hint" id="contactMsg">הטלפון נשמר בנפרד ולא מקושר לתשובות שלך.</p>`)}
     ${LIVE?"":`<details class="dev"><summary>לתומר בלבד: מה נשלח ל־Supabase (לא מופיע בדף החי)</summary><pre>${esc(JSON.stringify({code:S.code,version:SURVEY_VERSION,data:payload()},null,1))}</pre></details>`}
   </div>`;
