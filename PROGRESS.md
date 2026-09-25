@@ -13,5 +13,12 @@ One line per finished step. On resume: read this, check what exists, don't rerun
 - [x] 3a. `gh` 2.46.0 installed with apt; logged in as tomertalker. gh is the git credential helper for this repo only (repo-local config); global git config unchanged.
 - [x] 3b. Public repo https://github.com/tomertalker/ma-oved-lecha created, main pushed. Commits authored as tomertalker <tomertalker@users.noreply.github.com>.
 - [x] 3c. Pages on from main root (after 2c), built 2026-09-25 14:11 UTC: https://tomertalker.github.io/ma-oved-lecha/ (HTTPS enforced). Live page is byte-identical to index.html at 7795255.
-- [ ] 4. Live tests (insert ok ×2, select/update/delete denied ×2, `curl -I` 200, test rows deleted).
-- [ ] 5. Report.
+- [x] 4. Live tests, 2026-09-25 14:12:26–14:12:37 UTC, curl with post()'s exact headers + Origin tomertalker.github.io:
+  - PASS insert responses {code TEST01, version survey-v1, data {}}: 201, CORS allow-origin = tomertalker.github.io
+  - PASS insert contacts {phone 0500000000}: 201, same CORS
+  - PASS select responses / contacts: 401, 42501 permission denied (both)
+  - PASS update responses (code=eq.TEST01) / contacts (phone=eq.0500000000): 401, 42501 permission denied (both)
+  - PASS delete responses (code=eq.TEST01) / contacts (phone=eq.0500000000): 401, 42501 permission denied (both)
+  - PASS `curl -I` live URL: 200
+- [ ] 4b. Test rows: Tomer deletes them in the dashboard (exactly 2: responses code TEST01; contacts phone 0500000000). Not done from here: no service key, by design.
+- [x] 5. Report sent to Tomer (live URL, tests, survey.html changes = 2b, 2d, 2e, 2f, 2c).
