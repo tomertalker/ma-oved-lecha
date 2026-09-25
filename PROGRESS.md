@@ -9,7 +9,7 @@ One line per finished step. On resume: read this, check what exists, don't rerun
 - [x] 2e. License options = flower categories in the catalogue, THC high→low (tie: CBD low→high): T22/C4 (preselected), T18/C3, T15/C3, T10/C2, T10/C10, T3/C15, T1/C22, אחר. Dropped T20/C4, T1/C20.
 - [x] 1. Supabase project created by Tomer, `schema.sql` run by Tomer in the SQL Editor (2026-09-25). URL https://yernxedmokifcmpakzgd.supabase.co, key is a publishable key (`sb_publishable_…`). Don't rerun schema.sql.
 - [x] 2f. Key tested with curl (read-only probe): apikey-only and apikey+Bearer both reach Postgres as `anon` (select → 401 / 42501 permission denied, as intended). CORS preflight from tomertalker.github.io: 200, allows apikey,content-type,prefer. `post()` now sends the publishable key only as `apikey` (no `Authorization: Bearer`), per Tomer.
-- [ ] 2c. Fill SUPABASE_URL / SUPABASE_ANON_KEY (anon only).
+- [x] 2c. SUPABASE_URL / SUPABASE_ANON_KEY filled (publishable key only; no secret key anywhere). LIVE = true.
 - [x] 3a. `gh` 2.46.0 installed with apt; logged in as tomertalker. gh is the git credential helper for this repo only (repo-local config); global git config unchanged.
 - [x] 3b. Public repo https://github.com/tomertalker/ma-oved-lecha created, main pushed. Commits authored as tomertalker <tomertalker@users.noreply.github.com>.
 - [ ] 3c. Pages from main root: only AFTER 2c (Supabase keys in), so the page never goes live in preview mode.
