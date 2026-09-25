@@ -12,6 +12,6 @@ One line per finished step. On resume: read this, check what exists, don't rerun
 - [x] 2c. SUPABASE_URL / SUPABASE_ANON_KEY filled (publishable key only; no secret key anywhere). LIVE = true.
 - [x] 3a. `gh` 2.46.0 installed with apt; logged in as tomertalker. gh is the git credential helper for this repo only (repo-local config); global git config unchanged.
 - [x] 3b. Public repo https://github.com/tomertalker/ma-oved-lecha created, main pushed. Commits authored as tomertalker <tomertalker@users.noreply.github.com>.
-- [ ] 3c. Pages from main root: only AFTER 2c (Supabase keys in), so the page never goes live in preview mode.
+- [x] 3c. Pages on from main root (after 2c), built 2026-09-25 14:11 UTC: https://tomertalker.github.io/ma-oved-lecha/ (HTTPS enforced). Live page is byte-identical to index.html at 7795255.
 - [ ] 4. Live tests (insert ok ×2, select/update/delete denied ×2, `curl -I` 200, test rows deleted).
 - [ ] 5. Report.
